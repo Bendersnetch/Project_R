@@ -7,6 +7,7 @@ import org.newdawn.slick.SlickException;
 import fr.sae.game.caractere.Berserker;
 import fr.sae.game.caractere.Healer;
 import fr.sae.game.caractere.Mage;
+import fr.sae.game.caractere.Mobs;
 import fr.sae.game.caractere.Player;
 import fr.sae.game.caractere.Swordsman;
 import fr.sae.game.maps.Foret;
@@ -17,9 +18,11 @@ import java.util.Map;
 
 public class Global {
 	
+	//Parametrages de players 1 et 2
 	public static Player P1 = null;
 	public static Player P2 = null;
 		
+	//Vitesse de deplacemnts
 	public static float speed =0.1f;
 	
 	//Local variable permettant de savoir qui a la main
@@ -41,8 +44,8 @@ public class Global {
 	public static int pause =Input.KEY_ESCAPE;
 	public static int interract =Input.KEY_SPACE;
 	
-	//public static  Map<String, Integer> dictionnaireInputs = new HashMap<String, Integer>() {{put("UP", Input.KEY_UP);put("DOWN", Input.KEY_DOWN);put("LEFT", Input.KEY_LEFT);put("RIGHT", Input.KEY_RIGHT);put("SPACE", Input.KEY_SPACE);}};
 
+	//Hashmap de conversion des codes ascii des touches en noms
     public static Map<String, Integer> dictionnaireInputs = new HashMap<String, Integer>() {{
         put("UP", Input.KEY_UP);
         put("DOWN", Input.KEY_DOWN);
@@ -159,6 +162,9 @@ public class Global {
 	public static int width;
 	public static int height;
 
+	//Mobes
+	
+	public static Mobs[] mobs = new Mobs[4];
 	
 	//Characters
 	public static Integer MainPlayer=null;
@@ -166,10 +172,7 @@ public class Global {
 	public static String Player1Classe;
 	public static String Player2Classe;
 	
-	public static String Player1Name="";
-	
-	//Mobs --> Definisez tous les mobes ici 
-	
+	public static String Player1Name="";	
 	
 	//Collision maps
 	
@@ -177,7 +180,7 @@ public class Global {
 	public static Collisions Map2= new Collisions();
 
 	
-	
+
 	// Fonctions
 	
 	public static void InitializeGame() throws SlickException { //Fonction d'initialisation de project complet
@@ -222,7 +225,9 @@ public class Global {
 
 		    
 		} catch(Exception e){
+			
 			e.getMessage(); //Affiche le message d'erreur en cas ou l'initialisation du project mne marche pas correctement ducoup c'est une ligne importante en cas de debug
+			
 			System.out.println("Erreur dans le global sur la fonction initialize");
 		}
 	}	
@@ -231,25 +236,5 @@ public class Global {
 		canMoovPlayer=!canMoovPlayer;
 		canMoovDialogbox=!canMoovDialogbox;
 	}
-	 		 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	}
+
+}
