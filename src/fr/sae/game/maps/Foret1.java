@@ -107,7 +107,9 @@ public class Foret1 extends BasicGameState{
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-
+		//temp
+		sbg.enterState(12);
+		
 		Global.actualId = 11;
 		
 		//Fait les rendu des modeles

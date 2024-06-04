@@ -34,7 +34,6 @@ public class BattleScene extends BasicGameState {
     private int playedTurn = 0;
     
     
-    
     // turn managment
     private int currentTurnIndex=0;
     protected ArrayList<Entity> entities = new ArrayList<>();
@@ -144,12 +143,17 @@ public class BattleScene extends BasicGameState {
             switch (choice) {
             case 0:
                 // Gérer l'attaque
-            	this.tmpDialogbox1.setActiveTempDialogbox(false);
+            	this.tmpDialogbox1.setActiveTempDialogbox(true);
     			this.currentTurnIndex = (this.currentTurnIndex + 1 ) % (this.entities.size()); // sert à incrémenter les tours (oui juste ça)
+    	        this.tmpDialogbox1.setChoices(Arrays.asList(),null);
 
                 break;
         }
+      this.tmpDialogbox1.setActiveTempDialogbox(false);
+
     });
+    	
+
     	
     	this.dialogueBoxTourCurrentMobSoin= new DialogueBox(new String[] {
     		"\n "+
@@ -299,16 +303,22 @@ public class BattleScene extends BasicGameState {
     		//this.entities =  new ArrayList<>();
             sbg.enterState(Global.actualId);
     	}
+    	
     	if(!isWin() && !(Global.P1.isDead() && Global.P2.isDead())) {    		
+    		    		
     		this.tmpDialogbox1.renderTempDialgbox(g);
-    		this.dialogueBoxTourP1.render(g);
-    		this.dialogueBox.render(g); // Ajout de la variable dialogueBox
-    		this.dialogueBoxTourP1.render(g);
-    		this.dialogueBoxTourP2.render(g);
-    		this.dialogueBoxTourCurrentMobAttaque.render(g);
-    		this.dialogueBoxTourCurrentMobSoin.render(g);
-    		
-    		tour(g);
+			this.dialogueBoxTourP1.render(g);
+			this.dialogueBox.render(g); // Ajout de la variable dialogueBox
+			this.dialogueBoxTourP1.render(g);
+			this.dialogueBoxTourP2.render(g);
+			this.dialogueBoxTourCurrentMobAttaque.render(g);
+			this.dialogueBoxTourCurrentMobSoin.render(g);
+			
+			
+    		if(currentTurnIndex == playedTurn) {    	
+    			
+    			tour(g);
+    		}
     	}
     	//this.dialogueBox.renderForceDialogbox(g);
 
@@ -355,78 +365,79 @@ public class BattleScene extends BasicGameState {
     }
     
     public void tour(Graphics g) {
-    	
-    	System.out.println(Global.P1.isDead());
-    	if(this.playedTurn % this.entities.size() != this.currentTurnIndex) {
-    		if(this.currentTurnIndex == 0) {        	
-    			this.dialogueBoxTourP1.renderForceDialogbox(g);
-    			this.dialogueBoxTourP1.render(g);
-    		} else if(this.currentTurnIndex == 2) {        	
-    			this.dialogueBoxTourP2.renderForceDialogbox(g);
-    			this.dialogueBoxTourP2.render(g);
-    		} else {
-    			if(this.entities.get(currentTurnIndex).getHpActuel() < this.entities.get(currentTurnIndex).getHpMax()) {
-    				this.dialogueBoxTourCurrentMobSoin.renderForceDialogbox(g);
-    				this.dialogueBoxTourCurrentMobSoin.render(g);
-    			} else {
-    				int hit = ((Chaton) this.entities.get(currentTurnIndex)).griffesHit();
-    				this.dialogueBoxTourCurrentMobAttaque.renderForceDialogbox(g);
-    				this.dialogueBoxTourCurrentMobAttaque.render(g);
-    				if (!Global.P1.isDead()) { // foutre des dégats au plus faible (oui c'est du harcèlement)
-    					Global.P1.getHit(hit);
-    					//System.out.println( "-"+ hit + " pour P1");
-    					if( Global.P1.isDead()) {
-    						
-							this.dialogueBoxTourCurrentMobAttaque.setChoices(Arrays.asList("Continuer"), choice2 -> {
-				                   switch (choice2) {
-	
-				                       case 0:
-				                    	   this.tmpDialogbox1.setActiveTempDialogbox(true);
-				                           this.tmpDialogbox1.setMessages(new String[] {
-					    			    			"\n "+
-					    			    					"     \n" +
-					    			    					"           Bob attaque " + Global.P1.getName() +"     \n"+
-					    			    					"            " + Global.P1.getName() + " est mort"});
-				                            
-				                            //Permet de dire qu'il s'agissait du dernier choix
-				                           this.tmpDialogbox1.setChoices(Arrays.asList(),null);
-				                           break;
-	
-				                   }
-				                    
-				               });
-							this.tmpDialogbox1.setActiveTempDialogbox(false);
-    					} else {    						
-    						this.dialogueBoxTourCurrentMobAttaque= new DialogueBox(new String[] {
-    								"\n "+
-    										"     \n" +
-    										"           Bob attaque " + Global.P1.getName() + "     \n"+
-    										"            " + Global.P1.getName() + "  possède maintenant " + Global.P1.getHpActuel() + " HP"
-    						});
-    					}
-    				} else {
-    					Global.P2.getHit(hit);
-    					//System.out.println( "-"+ hit + " pour P2");
-    					if( Global.P2.isDead()) {
-    						this.dialogueBoxTourCurrentMobAttaque= new DialogueBox(new String[] {
-	    			    			"\n "+
-	    			    					"     \n" +
-	    			    					"           Bob attaque " + Global.P2.getName() +"     \n"+
-	    			    							"            " + Global.P2.getName() + " est mort"
-	    			    	});
-    					} else {    						
-    						this.dialogueBoxTourCurrentMobAttaque= new DialogueBox(new String[] {
-    								"\n "+
-    										"     \n" +
-    										"           Bob attaque " + Global.P2.getName() +"     \n"+
-    										"            " + Global.P2.getName() + "  possède maintenant " + Global.P2.getHpActuel() + " HP"
-    						});
-    					}
-    				}
-    				
-    			}
-    		}
-    		this.playedTurn ++;
-    	}
+		if(this.currentTurnIndex == 0) {        	
+			this.dialogueBoxTourP1.renderForceDialogbox(g);
+			this.dialogueBoxTourP1.render(g);
+		} else if(this.currentTurnIndex == 2) {        	
+			this.dialogueBoxTourP2.renderForceDialogbox(g);
+			this.dialogueBoxTourP2.render(g);
+		} else {
+			if(this.entities.get(currentTurnIndex).getHpActuel() < this.entities.get(currentTurnIndex).getHpMax()) {
+				this.dialogueBoxTourCurrentMobSoin.renderForceDialogbox(g);
+				this.dialogueBoxTourCurrentMobSoin.render(g);
+			} else {
+				int hit = ((Chaton) this.entities.get(currentTurnIndex)).griffesHit();
+				this.dialogueBoxTourCurrentMobAttaque.renderForceDialogbox(g);
+				this.dialogueBoxTourCurrentMobAttaque.render(g);
+				if (!Global.P1.isDead()) { // foutre des dégats au plus faible (oui c'est du harcèlement)
+
+					Global.P1.getHit(hit);
+					//System.out.println( "-"+ hit + " pour P1");
+					if( Global.P1.isDead()) {
+
+						this.tmpDialogbox1.setChoices(Arrays.asList("Continuer"), choice2 -> {
+			                   switch (choice2) {
+
+			                       case 0:
+			                    	   this.tmpDialogbox1.setActiveTempDialogbox(true);
+			                           this.tmpDialogbox1.setMessages(new String[] {
+				    			    			"\n "+
+				    			    					"     \n" +
+				    			    					"           Bob attaque " + Global.Player1Classe +"     \n"+
+				    			    					"            " + Global.Player1Classe + " est mort"});
+			                            
+			                            //Permet de dire qu'il s'agissait du dernier choix
+			                           this.tmpDialogbox1.setChoices(Arrays.asList(),null);
+			                           break;
+
+			                   }
+			                    
+			               });
+						this.tmpDialogbox1.setActiveTempDialogbox(false);
+					} else {    	
+						this.tmpDialogbox1= new DialogueBox(new String[] {
+								"\n "+
+										"     \n" +
+										"           Bob attaque " + Global.Player1Classe + "     \n"+
+										"            " + Global.Player1Classe + "  possède maintenant " + Global.P1.getHpActuel() + " HP"
+						});
+					}
+					
+				} else {
+					System.err.println("toto");
+					Global.P2.getHit(hit);
+					//System.out.println( "-"+ hit + " pour P2");
+					if( Global.P2.isDead()) {
+						this.tmpDialogbox1= new DialogueBox(new String[] {
+    			    			"\n "+
+    			    					"     \n" +
+    			    					"           Bob attaque " + Global.Player2Classe +"     \n"+
+    			    							"            " + Global.Player2Classe + " est mort"
+    			    	});
+					} else {    						
+							this.tmpDialogbox1= new DialogueBox(new String[] {
+									"\n "+
+										"     \n" +
+										"           Bob attaque " + Global.Player2Classe +"     \n"+
+										"            " + Global.Player2Classe + "  possède maintenant " + Global.P2.getHpActuel() + " HP"
+						});
+					}
+				}
+			}
+			playedTurn++;
+
+		}
+		System.err.println("P1 death:"+Global.P1.isDead()+"  ;   P2 death:"+Global.P2.isDead());
+
     }
 }
